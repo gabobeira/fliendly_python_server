@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # server.py 
-import socket, time, datetime, pytz
+import socket, datetime, pytz
 
 # create a socket object
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
