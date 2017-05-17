@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # server.py 
-import socket, datetime, pytz
+import socket, time, datetime, pytz
 
 # create a socket object
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
@@ -23,24 +23,21 @@ while True:
     clientsocket,addr = serversocket.accept()    
     print("\nGot a connection from %s " % str(addr))
     
-    print("Waiting for timezone...")
-    tz = clientsocket.recv(1024)
+    while 1:
+        print("Waiting for timezone...")
+        tz = clientsocket.recv(1024)
     
-    if tz == 'close':
-	print("Bye!")
-	clientsocket.sendall('\r\n')
-	serversocket.close()	
-	break
+        if tz == 'close':
+            print("Bye! \n\nWaiting for connection...")
+	    break
 
-    if tz not in pytz.all_timezones:
-        print("Try again!")
-	clientsocket.sendall("Sorry, not a valid timezone!\r\n")
-	continue
+        if tz not in pytz.all_timezones:
+            print("Try again!\n")
+	    clientsocket.sendall("Sorry, not a valid timezone!\n")
+	    continue
     
-    timezone = "The time in "+tz+" got from the server is "+str(datetime.datetime.now(pytz.timezone(tz)))+"!\r\n"
-    clientsocket.sendall(timezone) 
-    print("Done!")
+        timezone = "The time in "+tz+" got from the server is "+str(datetime.datetime.now(pytz.timezone(tz)))+"\n"
+        clientsocket.sendall(timezone) 
+        print("Done!\n")
+    
     clientsocket.close()
-    
-
-
